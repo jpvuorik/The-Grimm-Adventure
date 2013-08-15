@@ -3,7 +3,8 @@
  * and open the template in the editor.
  */
 
-import grimm.Place;
+import grimm.Location;
+import grimm.TheGrimmAdventure;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,22 +42,22 @@ public class GrimmTest {
     
     @Test
     public void constructorsNamingWorks() {
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         Assert.assertEquals(cave.getName(), "Cave");
     }
     @Test
     public void constructorsDescriptionWorks() {
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         Assert.assertEquals(cave.getDescription(), "You are in a cave.");
     }
     
     @Test
     public void constructTwoPlaces() {
-        Place cave,mine;
-        cave = new Place("Cave", "You are in a cave.");
-        mine = new Place("Mine", "You are in a mine.");
+        Location cave,mine;
+        cave = new Location("Cave", "You are in a cave.");
+        mine = new Location("Mine", "You are in a mine.");
         Assert.assertEquals(cave.getName(), "Cave");
         Assert.assertEquals(mine.getName(), "Mine");
         Assert.assertEquals(cave.getDescription(), "You are in a cave.");
@@ -65,16 +66,16 @@ public class GrimmTest {
     
     @Test
     public void setNameWorks() {
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.setName ("Collapsed Cave");
         Assert.assertEquals(cave.getName(), "Collapsed Cave");
     }
     
     @Test
     public void setDescriptionWorks() {
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.setDescription("It's dark.");
         Assert.assertEquals(cave.getDescription(), "It's dark.");
     }
@@ -82,8 +83,8 @@ public class GrimmTest {
     @Test
     public void noExits() {
         String [] testi;
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         testi = cave.getExits();
         for (int i=0;i<10;i++) {
             Assert.assertEquals(testi[i], null);
@@ -93,8 +94,8 @@ public class GrimmTest {
     @Test
     public void oneExit() {
         String [] testi;
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.addExit ("Mine", 5);
         testi = cave.getExits();
         Assert.assertEquals(testi[5], "Mine"); 
@@ -103,8 +104,8 @@ public class GrimmTest {
     @Test
     public void multipleExits() {
         String [] testi;
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.addExit ("Mine", 5);
         cave.addExit ("Cave Entrance", 1);
         cave.addExit ("Dead-end", 9);
@@ -117,8 +118,8 @@ public class GrimmTest {
     @Test
     public void removeOneExit() {
         String [] testi;
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.addExit ("Mine", 5);
         cave.removeExit(5);
         testi = cave.getExits();
@@ -128,8 +129,8 @@ public class GrimmTest {
     @Test
     public void removeAllExits() {
         String [] testi;
-        Place cave;
-        cave = new Place("Cave", "You are in a cave.");
+        Location cave;
+        cave = new Location("Cave", "You are in a cave.");
         cave.addExit ("Mine", 5);
         cave.addExit ("Cave Entrance", 1);
         cave.addExit ("Dead-end", 9);
@@ -142,5 +143,46 @@ public class GrimmTest {
         Assert.assertEquals(testi[9], null);
     }
     
+    @Test
+    public void testMain() {
+        System.out.println("testMain");
+        String[] test;
+        test = new String[3];
+        TheGrimmAdventure.main(test);
+        System.out.println();
+    }
+    
+    @Test
+    public void testStartGame() {
+        System.out.println("testStartGame");
+        Location[] testGame;
+        testGame = new Location [20];
+        testGame[0] = new Location ("Old Woods", "You are at the entrance of an ancient forest.");
+        testGame[0].addExit("Tall Tree", 0);
+        testGame[1] = new Location ("Tall Tree", "You are in a tree.");
+        testGame[1].addExit("Old Woods", 5);
+        testGame[1].startGame(testGame, 1);
+        String[] testi;
+        testi = testGame[1].getExits();
+        Assert.assertEquals(testi[5], "Old Woods");
+        testi = testGame[0].getExits();
+        Assert.assertEquals(testi[0], "Tall Tree");
+        System.out.println();
+    }
+    
+    @Test
+    public void printExitsTest() {
+        System.out.println("printExitsTest");
+        Location[] testGame;
+        testGame = new Location [20];
+        testGame[0] = new Location ("Old Woods", "You are at the entrance of an ancient forest.");
+        testGame[0].addExit("Tall Tree", 0);
+        testGame[0].addExit("Forest Road", 8);
+        testGame[1] = new Location ("Tall Tree", "You are in a tree.");
+        testGame[1].addExit("Old Woods", 5);
+        testGame[0].printExits();
+        testGame[1].printExits();
+        System.out.println();
+    }
 }
     

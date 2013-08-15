@@ -19,6 +19,7 @@ public class Exit {
         public static final int NORTHWEST = 7;
         public static final int NORTH = 8;
 	public static final int NORTHEAST = 9;
+        
 
 	public static final String[] directionName = 
 	{ 
@@ -48,5 +49,6 @@ public class Exit {
 		"N",
 		"NE",	
 	};
-
 }
+
+
