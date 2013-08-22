@@ -4,6 +4,7 @@
  */
 
 import grimm.Location;
+import grimm.Character;
 import grimm.TheGrimmAdventure;
 import junit.framework.Assert;
 import org.junit.After;
@@ -40,6 +41,68 @@ public class GrimmTest {
     public void tearDown() {
     }
     
+    @Test
+    public void characterCreationName() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = new String[10];
+        inv[0] ="pen";            
+        helmut = new Character ("Helmut", attr, inv);
+        Assert.assertEquals(helmut.getName(), "Helmut");
+    }
+     
+    @Test
+    public void characterCreationInventory() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = new String[10];
+        inv[0] ="pen";            
+        helmut = new Character ("Helmut", attr, inv);
+        Assert.assertEquals(helmut.getItems()[0], "pen");
+    }
+    
+    @Test
+    public void characterCreationAttributes() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = new String[10];
+        inv[0] ="pen";            
+        helmut = new Character ("Helmut", attr, inv);
+        Assert.assertEquals(helmut.getAttributes()[0], true);
+    }
+    
+    @Test
+    public void testAttributeSetting() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = new String[10];
+        inv[0] ="pen";            
+        helmut = new Character ("Helmut", attr, inv);
+        helmut.setAttribute(0, false);
+        Assert.assertEquals(helmut.getAttributes()[0], false);
+    }
+    
+    @Test
+    public void testInventorySetting() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = new String[10];
+        inv[0] ="pen";
+        helmut = new Character ("Helmut", attr, inv);
+        helmut.setItem("lighter");
+        Assert.assertEquals(helmut.getItems()[0], "pen");
+        Assert.assertEquals(helmut.getItems()[1], "lighter");
+    }
+    
+    @Test
+    public void testAttributeDescribing() {
+        Character helmut;
+        boolean [] attr =  {true,false,true,true,true,true,true}; 
+        String [] inv = {"pen"};            
+        helmut = new Character ("Helmut", attr, inv);
+        helmut.describeAttributes();
+    }
+      
     @Test
     public void constructorsNamingWorks() {
         Location cave;
