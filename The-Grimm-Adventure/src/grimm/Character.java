@@ -4,6 +4,8 @@
  */
 package grimm;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author John
@@ -41,12 +43,12 @@ public class Character {
      * charAttribute[0] == true niin hahmo on urheilullinen, jos taas
      * charAttribute[6] == false niin hahmo ei tiedä juuri mitään saduista.
      */
-    private boolean[] charAttributes;
+    private int[] charAttributes;
     
     /**
      * Hahmon kannossa olevat esineet.
      */
-    private String[] inventory;
+    private ArrayList<String> inventory;
     
     /**
      * Luo hahmon peliin.
@@ -55,7 +57,7 @@ public class Character {
      * @param stats     Hahmon attribuutit.
      * @param items     Hahmon kannossa olevat esineet.
      */
-    public Character (String name, boolean[] stats, String[] items){
+    public Character (String name, int[] stats, ArrayList<String> items){
         charName = name;
         charAttributes = stats;
         inventory = items;
@@ -67,7 +69,7 @@ public class Character {
      * @param stat      Valitun attribuutin sijainti taulukossa.
      * @param value     Valittu arvo attribuutille.
      */
-    public void setAttribute (int stat, boolean value) {
+    public void setAttribute (int stat, int value) {
         charAttributes[stat] = value;
     }
     
@@ -77,22 +79,24 @@ public class Character {
      * @param item Esine, joka lisätään inventaarioon.
      */
     public void setItem (String item) {
-        for (int i =0; i <inventory.length;i++) {
-            if (inventory[i]== null) {
-                inventory[i]= item;
-                i = inventory.length;
-            }
-        }
-    }
+        inventory.add(item);
+    }   
     
     /**
      * Palauttaa hahmon inventaarion.
      * 
      * @return Inventaariolista.
      */
-    public String[] getItems() {
+    public ArrayList<String> getItems() {
         return inventory;
     }
+    
+    public boolean checkInventory(String item) {
+        if (inventory.contains(item)) {
+            return true;
+        } else
+            return false;
+     }
     
     /**
      * Metodi palauttaa hahmon nimen.
@@ -109,13 +113,13 @@ public class Character {
     public void describeAttributes() {
         System.out.println("Your characters strong points are:");
         for (int i =0;i<7;i++) {
-            if (charAttributes[i]) {
+            if (charAttributes[i]==3) {
                 System.out.println(charAttributeNames[i]);
             }
         }
         System.out.println("Your characters weak points are:");
         for (int i =0;i<7;i++) {
-            if (!charAttributes[i]) {
+            if (charAttributes[i]==1) {
                 System.out.println(charAttributeNames[i]);
             }
         }
@@ -126,7 +130,7 @@ public class Character {
      * 
      * @return Hahmon attribuutit.
      */
-    public boolean[] getAttributes() {
+    public int[] getAttributes() {
         return charAttributes;
     }
 }

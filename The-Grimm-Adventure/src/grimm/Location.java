@@ -3,6 +3,9 @@
  * and open the template in the editor.
  */
 package grimm;
+
+import java.util.ArrayList;
+
 /**
  *
  * @author John
@@ -18,12 +21,16 @@ public class Location {
      */
     private String locationDescription;
     /**
-     * Alueen uloskäynnit.
+     * Alueen uloskäynnit. Arvo on se game taulun lokero, johon uloskäynti vie.
+     * Lokero kuvaa suuntaa, jossa uloskäynti on, ilmansuunnat numpadin mukaan, 0 ylös ja 5 alas.
      */
-    private String[] exits;
-    
+    private int[] exits;
     /**
-     * Luo uuden alueen peliin.
+     * Alueen manipuloitavat objektit
+     */
+    ArrayList<String> objects;
+    /**
+     * Luo uuden alueen peliin. Jos suunnassa ei ole uloskäyntiä, se saa arvon 10
      * 
      * @param name Alueelle annettu nimi
      * 
@@ -32,7 +39,9 @@ public class Location {
     public Location (String name, String description) {
         locationName = name;
         locationDescription = description;
-        exits = new String[10];
+        exits = new int[10];
+        objects = new ArrayList();
+        for (int i=0;i<10;i++) { exits[i]=10; }
     }
     
       /**
@@ -42,8 +51,8 @@ public class Location {
        * 
        * @param name Lisättävän uloskäynnin nimi.
        */
-    public void addExit(String name, int direction) {
-        exits[direction] = name;
+    public void addExit(int destination, int direction) {
+        exits[direction] = destination;
     }
     
     /**
@@ -52,7 +61,7 @@ public class Location {
      * @param direction Poistettavan uloskäynnin suunta.
       */
     public void removeExit (int direction) {
-        exits[direction] = null;
+        exits[direction] = 10;
     }
     
     /**
@@ -60,7 +69,7 @@ public class Location {
      * 
      * @return Alueen uloskäynnit.
      */
-    public String[] getExits () {
+    public int[] getExits () {
         return exits;
     }
     
@@ -101,35 +110,49 @@ public class Location {
     }
     
     /**
-     * Alkaa ajamaan peliä.
-     * 
-     * @param gameArea Pelin kaikki alueet.
-     * @param area Aloitus alue.
-     */
-    // En ole vielä varma mihin laittaisin tämän metodin.
-    public void startGame (Location gameArea[], int area) {
-        TheGrimmAdventure.quit = false;
-        System.out.println("Welcome to The Grimm Adventure.");
-        while (!TheGrimmAdventure.quit) {
-            System.out.println(gameArea[area].getName());
-            System.out.println(gameArea[area].getDescription());
-            gameArea[area].printExits();
-            // Muista poistaa.
-            TheGrimmAdventure.quit = true;
-        }
-    }
-    
-    /**
      * Tulostaa ruudulle alueen uloskäynnit.
      */
     public void printExits() {
         System.out.print("There are exits leading: ");
         for (int i=0; i<10;i++) {
-            if (exits[i] != null) {
+            if (exits[i] != 10) {
                 System.out.print(Exit.directionName[i] + " ");
             }
         }
         System.out.println();
+    }
+    
+    public void addObject (String name) {       
+        objects.add(name);
+                    
+        }
+        
+        
+        //objectsArrayList.get(objectsArrayList.indexOf("FISH"));
+/*        
+        for (int i=0; i<10;i++) {
+            if (objects[i] == null) {
+                objects[i]=name;
+                i=10;
+            }
+        }
+        */
+    
+    
+    public ArrayList<String> getObjects () {
+        return objects;        
+    }
+    
+    public boolean isObjetHere(String object) {
+        if (objects.contains(object)) {
+            
+        //if(Game.locations[Game.playerLocation].getObjects()[i].equals(object)) {
+            return true;
+        }
+        return false;
+    }
+    public void removeObject (String name) {
+        objects.remove(name);
     }
 }
 
