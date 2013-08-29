@@ -7,7 +7,9 @@ package grimm;
 import java.util.ArrayList;
 
 /**
- *
+ * Character luokassa on kaikki pelihahmo-olioita suoraan käsittelevät metodit.
+ * Myös konstruktori, joka luo kyseiset olit (no vain yhden per peli).
+ * 
  * @author John
  */
 public class Character {
@@ -30,12 +32,17 @@ public class Character {
     {
         "Athletics",
         "Size",
-        "Booksmarts",
+        "Smarts",
         "Bravery",
         "Brawn",
         "Charisma",
         "FableLore"  
     };
+    
+    /**
+     * Onko hahmo saanut kyvyn puhua eläimille?
+     */
+    public static boolean animalFriend = false;
     
     /**
      * Hahmon attribuuttien arvot. True, jos vastaava charAttributeNames alkio
@@ -78,7 +85,7 @@ public class Character {
      * 
      * @param item Esine, joka lisätään inventaarioon.
      */
-    public void setItem (String item) {
+    public void addItem (String item) {
         inventory.add(item);
     }   
     
@@ -91,13 +98,19 @@ public class Character {
         return inventory;
     }
     
+    /**
+     * Tarkistaa onko hahmon inventaariossa annettua esinettä.
+     * 
+     * @param item Annetun esineen nimi.
+     * @return  Palauttaa true, jos on, false muuten.
+     */
     public boolean checkInventory(String item) {
         if (inventory.contains(item)) {
             return true;
-        } else
+        } else {
             return false;
-     }
-    
+        }
+    }
     /**
      * Metodi palauttaa hahmon nimen.
      * 
@@ -130,8 +143,17 @@ public class Character {
      * 
      * @return Hahmon attribuutit.
      */
-    public int[] getAttributes() {
-        return charAttributes;
+    public int getAttributes(int index) {
+        return charAttributes[index];
+    }
+    
+    /**
+     * Poistaa esineen hahmon inventaariosta
+     * 
+     * @param item Poistettavan esineen nimi.
+     */
+    public void removeItem(String item) {
+        inventory.remove(item);
     }
 }
 

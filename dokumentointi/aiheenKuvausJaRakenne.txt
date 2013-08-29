@@ -1,0 +1,29 @@
+aihekuvaus
+
+Ohjelmoinnin harjoitustyˆni aiheena on tekstiseikkailu "The Grimm Adventure". 
+Peliss‰ ollaan saksalainen koululapsi seikkailemassa Grimmin satujen maailmassa. 
+P‰‰hahmo on Klaus Heinrich, 11 vuotias saksalainen koulukiusaaja. Vain muutama 
+esine mukanaan tulee h‰nen selvit‰ l‰pi vaarallisista koettelemuksista. 
+Aseenaan h‰nell‰ on vain aseensa ja mummolta saamistaan tietonsa Grimmin saduista.
+
+Perustoiminnot:
+Pelaaja voi siirty‰ alueesta toiseen
+Pelaajalla on inventaario
+Pelihahmolla on nimi ja taustatarina
+Aina, kun pelaaja vaihtaa aluetta, alueesta tulee kuvaus
+Peliss‰ on jonkin asteinen parseri
+Jokaisella alueella on ulosmenotie ja voi olla esineit‰, joita voi manipuloida
+Kaksi ylim‰‰r‰ist‰ valittavaa pelihahmoa, joilla eri ominaisuudet (ei l‰pipelattava)
+Eri ratkaisut ongelmiin eri hahmoilla (lihava lapsi lahjoo suden ruoalla, nopea juoksee sutta pakoon yms.)
+
+
+
+Rakenne
+
+TheGrimmAdventure on pelin p‰‰luokka, se kysyy pelaajalta hahmonvalintaa ja kertoo hahmon taustatarinan (Klausin tapauksessa).
+Se laittaa sitten Game luokan pyˆritt‰m‰‰n peli‰. Game luokka m‰‰rittelee pelin sis‰llˆn, k‰skem‰ll‰ Locations ja Character luokkia
+luomaan halutut paikat, esineet ja p‰‰hahmon. Character-lukka on vastuussa p‰‰hahmosta, h‰nen attribuuteistaan ja esineist‰‰n.
+Locations taas paikoista, niiden esineist‰ ja ulosk‰ynneist‰. Sitten Game laittaa Locationsin n‰ytt‰m‰‰n pelaajalle paikan kuvauksen
+ja pyyt‰‰ pelaajalta komentoa. Saatuaan komennon, se l‰hett‰‰ sen Command luokalle, joka k‰y l‰pi kaikki pelin komennot ja tarkastaa
+onko pelaajan k‰sky mik‰‰n niist‰. Jos on, Command toteuttaa sen ja palauttaa Gamelle t‰st‰ seuraavan tekstikuvauksen. T‰m‰
+jatkuu loopissa, kunnes pelaaja lopettaa, pelihahmo kuolee tai pelaaja voittaa.

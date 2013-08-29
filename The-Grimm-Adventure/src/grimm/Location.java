@@ -7,7 +7,9 @@ package grimm;
 import java.util.ArrayList;
 
 /**
- *
+ *Location-luokall luodaan ja käsitellään kaikkia pelin alueita. Alueet luodaan, niille annetaan nimi,
+ *  käsiteltävät asiat ja uloskäynnit toisiin alueisiin.
+ * 
  * @author John
  */
 public class Location {
@@ -121,36 +123,44 @@ public class Location {
         }
         System.out.println();
     }
-    
+   
+    /**
+     * Lisää alueeseen objektin.
+     * 
+     * @param name Objektin nimi.
+     */
     public void addObject (String name) {       
         objects.add(name);
                     
         }
         
-        
-        //objectsArrayList.get(objectsArrayList.indexOf("FISH"));
-/*        
-        for (int i=0; i<10;i++) {
-            if (objects[i] == null) {
-                objects[i]=name;
-                i=10;
-            }
-        }
-        */
-    
-    
+    /**
+     * Palauttaa alueen objektit.
+     * 
+     * @return 
+     */    
     public ArrayList<String> getObjects () {
         return objects;        
     }
     
-    public boolean isObjetHere(String object) {
+    /**
+     * Tarkistaa onko alueessa annetun nimistä objektia. Palauttaa true, jos on.
+     * 
+     * @param object Annettu nimi.
+     * @return 
+     */
+    public boolean isObjectHere(String object) {
         if (objects.contains(object)) {
-            
-        //if(Game.locations[Game.playerLocation].getObjects()[i].equals(object)) {
             return true;
         }
         return false;
     }
+    
+    /**
+     * Poistaa alueesta valitun nimisen objektin.
+     * 
+     * @param name Poistettavan objektin nimi.
+     */
     public void removeObject (String name) {
         objects.remove(name);
     }

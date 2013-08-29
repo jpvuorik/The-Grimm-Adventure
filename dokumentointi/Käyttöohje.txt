@@ -1,0 +1,38 @@
+Ensiksi peliss‰ pit‰‰ valita pelattava hahmo. Deadlineen menness‰ sain vain Klausin sellaiseen kuntoon, ett‰ h‰nell‰ voi pelata pelin l‰pi.
+Axelilla voi pelata melkein loppuun, mutta h‰nell‰ on v‰hemm‰n sis‰ltˆ‰. Albrechtilla voi ratkaista vain yhden kunnon puzzlen ja vain v‰h‰n muuta.
+
+Peli on tekstiseikkailu englanniksi ja kaikki komennot pit‰‰ antaa englanniksi. Teksti saa olla isoa tai pient‰ ja t‰ytesanoilla ei ole v‰li‰ vain ensimm‰isell‰
+sanalaa (pit‰isi yleens‰ olla verbi, paitsi matkustaessa ja parissa muussa peruskomennossa).
+Komentoja:
+	help: Luettelee pelin k‰ytt‰mi‰ verbej‰ ja k‰skyj‰
+	north (tai n): K‰vele pohjoiseen
+	south (tai s): K‰vele etel‰‰n
+	east (tai e): K‰vele it‰‰n
+	west (tai w): K‰vele l‰nteen
+	describe: Kuvailee hahmoa v‰h‰n
+	inventory (tai i): N‰ytt‰‰ hahmon inventaarion
+	quit tai exit: Lopettaa pelin
+
+K‰skyj‰ annetaan tyyliin:	TALK TO HEDGEHOG (to ei tuossa tee mit‰‰n eli TALK HEDGEHOG tekee saman asian ja niin myˆs talk hedgehog)
+				USE CROWBAR ON SKY (taas kerran ON ei tee mit‰‰n, ja ei peliss‰ ei ole niin sorkkarautaa kuin taivastakaan)
+
+
+Klausin ensimm‰inen puzzle saattaa olla hieman kryptinen. Klaus voi selvit‰ Grimmin julmasta maailmasta vain muistamalla kuka on ja mit‰ osaa tehd‰.
+Kirjoitan ensimm‰isen puzzlen vastauksen sivua alemmas varmuuden vuoksi.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klaus ei ole tarpeeksi hyv‰ uimaan p‰‰st‰kseen maihin, mutta tuo kala tuossa vieress‰ voisi auttaa siin‰.
+Ensiksi Klausin pit‰‰ nuijia se ‰rsytt‰v‰ kala, jotta vois sen saada kiinni. Mutta koska h‰n ei siihen k‰sill‰‰n yll‰, pit‰‰ h‰nen piest‰ se mailallaan.
+Sitten onkin helppoa sitoa kˆysi kalan ymp‰rille, ja n‰in valjastaa se upeaan uuteen veneeseesi.

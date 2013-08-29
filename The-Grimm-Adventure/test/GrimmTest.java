@@ -5,7 +5,10 @@
 
 import grimm.Location;
 import grimm.Character;
+import grimm.Command;
+import grimm.Game;
 import grimm.TheGrimmAdventure;
+import java.util.ArrayList;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,62 +47,63 @@ public class GrimmTest {
     @Test
     public void characterCreationName() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = new String[10];
-        inv[0] ="pen";            
-        helmut = new Character ("Helmut", attr, inv);
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");            
+        helmut = new Character ("Helmut", attributes, inv);
         Assert.assertEquals(helmut.getName(), "Helmut");
     }
      
     @Test
     public void characterCreationInventory() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = new String[10];
-        inv[0] ="pen";            
-        helmut = new Character ("Helmut", attr, inv);
-        Assert.assertEquals(helmut.getItems()[0], "pen");
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");
+        helmut = new Character ("Helmut", attributes, inv);
+        Assert.assertEquals(helmut.getItems().get(0), "pen");
     }
     
     @Test
     public void characterCreationAttributes() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = new String[10];
-        inv[0] ="pen";            
-        helmut = new Character ("Helmut", attr, inv);
-        Assert.assertEquals(helmut.getAttributes()[0], true);
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");
+        helmut = new Character ("Helmut", attributes, inv);
+        Assert.assertEquals(helmut.getAttributes(0), 2);
     }
     
     @Test
     public void testAttributeSetting() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = new String[10];
-        inv[0] ="pen";            
-        helmut = new Character ("Helmut", attr, inv);
-        helmut.setAttribute(0, false);
-        Assert.assertEquals(helmut.getAttributes()[0], false);
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");
+        helmut = new Character ("Helmut", attributes, inv);
+        helmut.setAttribute(0, 1);
+        Assert.assertEquals(helmut.getAttributes(0), 1);
     }
     
     @Test
     public void testInventorySetting() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = new String[10];
-        inv[0] ="pen";
-        helmut = new Character ("Helmut", attr, inv);
-        helmut.setItem("lighter");
-        Assert.assertEquals(helmut.getItems()[0], "pen");
-        Assert.assertEquals(helmut.getItems()[1], "lighter");
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");
+        helmut = new Character ("Helmut", attributes, inv);
+        helmut.addItem("lighter");
+        Assert.assertEquals(helmut.getItems().get(0), "pen");
+        Assert.assertEquals(helmut.getItems().get(1), "lighter");
     }
     
     @Test
     public void testAttributeDescribing() {
         Character helmut;
-        boolean [] attr =  {true,false,true,true,true,true,true}; 
-        String [] inv = {"pen"};            
-        helmut = new Character ("Helmut", attr, inv);
+        int[] attributes ={2,3,1,1,3,1,3};
+        ArrayList<String> inv = new ArrayList();
+        inv.add("pen");
+        helmut = new Character ("Helmut", attributes, inv);
         helmut.describeAttributes();
     }
       
@@ -145,107 +149,133 @@ public class GrimmTest {
     
     @Test
     public void noExits() {
-        String [] testi;
+        int [] testi;
         Location cave;
         cave = new Location("Cave", "You are in a cave.");
         testi = cave.getExits();
         for (int i=0;i<10;i++) {
-            Assert.assertEquals(testi[i], null);
+            Assert.assertEquals(testi[i], 10);
         }
      }
     
     @Test
     public void oneExit() {
-        String [] testi;
+        int [] testi;
         Location cave;
         cave = new Location("Cave", "You are in a cave.");
-        cave.addExit ("Mine", 5);
+        cave.addExit (1, 5);
         testi = cave.getExits();
-        Assert.assertEquals(testi[5], "Mine"); 
+        Assert.assertEquals(testi[5], 1); 
         }
         
     @Test
     public void multipleExits() {
-        String [] testi;
+        int [] testi;
         Location cave;
         cave = new Location("Cave", "You are in a cave.");
-        cave.addExit ("Mine", 5);
-        cave.addExit ("Cave Entrance", 1);
-        cave.addExit ("Dead-end", 9);
+        cave.addExit (1, 5);
+        cave.addExit (2, 1);
+        cave.addExit (3, 9);
         testi = cave.getExits();
-        Assert.assertEquals(testi[5], "Mine"); 
-        Assert.assertEquals(testi[1], "Cave Entrance"); 
-        Assert.assertEquals(testi[9], "Dead-end"); 
+        Assert.assertEquals(testi[5], 1); 
+        Assert.assertEquals(testi[1], 2); 
+        Assert.assertEquals(testi[9], 3); 
     }
     
     @Test
     public void removeOneExit() {
-        String [] testi;
+        int [] testi;
         Location cave;
         cave = new Location("Cave", "You are in a cave.");
-        cave.addExit ("Mine", 5);
+        cave.addExit (0, 5);
         cave.removeExit(5);
         testi = cave.getExits();
-        Assert.assertEquals(testi[5], null); 
+        Assert.assertEquals(testi[5], 10); 
         }
 
     @Test
     public void removeAllExits() {
-        String [] testi;
+        int [] testi;
         Location cave;
         cave = new Location("Cave", "You are in a cave.");
-        cave.addExit ("Mine", 5);
-        cave.addExit ("Cave Entrance", 1);
-        cave.addExit ("Dead-end", 9);
+        cave.addExit (0, 5);
+        cave.addExit (1, 1);
+        cave.addExit (2, 9);
         for (int i=0;i<10;i++) {
             cave.removeExit(i);
         }
         testi = cave.getExits();
-        Assert.assertEquals(testi[1], null);
-        Assert.assertEquals(testi[5], null);
-        Assert.assertEquals(testi[9], null);
+        Assert.assertEquals(testi[1], 10);
+        Assert.assertEquals(testi[5], 10);
+        Assert.assertEquals(testi[9], 10);
     }
     
     @Test
-    public void testMain() {
-        System.out.println("testMain");
-        String[] test;
-        test = new String[3];
-        TheGrimmAdventure.main(test);
-        System.out.println();
+    public void gameNamingTest() {
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Assert.assertEquals(Game.locations[0].getName(),"Lake");
     }
     
     @Test
-    public void testStartGame() {
-        System.out.println("testStartGame");
-        Location[] testGame;
-        testGame = new Location [20];
-        testGame[0] = new Location ("Old Woods", "You are at the entrance of an ancient forest.");
-        testGame[0].addExit("Tall Tree", 0);
-        testGame[1] = new Location ("Tall Tree", "You are in a tree.");
-        testGame[1].addExit("Old Woods", 5);
-        testGame[1].startGame(testGame, 1);
-        String[] testi;
-        testi = testGame[1].getExits();
-        Assert.assertEquals(testi[5], "Old Woods");
-        testi = testGame[0].getExits();
-        Assert.assertEquals(testi[0], "Tall Tree");
-        System.out.println();
+    public void gameCharacterTest() {
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Assert.assertEquals(Game.player.getName(),"Klaus");
     }
     
     @Test
-    public void printExitsTest() {
-        System.out.println("printExitsTest");
-        Location[] testGame;
-        testGame = new Location [20];
-        testGame[0] = new Location ("Old Woods", "You are at the entrance of an ancient forest.");
-        testGame[0].addExit("Tall Tree", 0);
-        testGame[0].addExit("Forest Road", 8);
-        testGame[1] = new Location ("Tall Tree", "You are in a tree.");
-        testGame[1].addExit("Old Woods", 5);
-        testGame[0].printExits();
-        testGame[1].printExits();
-        System.out.println();
+    public void gameWalkingTest() {
+        String input = "NORTH";
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Game.locations[0].addExit(1, 8);
+            Assert.assertEquals(Game.locations[Game.playerLocation].getName(),"Lake");
+        Command.checkCommand(input);
+        Assert.assertEquals(Game.locations[Game.playerLocation].getName(),"Cave");
+    }
+    
+    @Test
+    public void gameWalkingBlockedTest() {
+        String input = "SOUTH";
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Game.locations[0].addExit(1, 8);
+        Assert.assertEquals(Game.locations[Game.playerLocation].getName(),"Lake");
+        Command.checkCommand(input);
+        Assert.assertEquals(Game.locations[Game.playerLocation].getName(),"Lake");
+    }
+    
+    @Test
+    public void parserTest() {
+        String input = "HIT FISH WITH BAT";
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Game.locations[0].addExit(1, 8);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("FREE FISH"), true);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH"), false);
+        Command.checkCommand(input);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("FREE FISH"), false);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH"), true);    
+    }
+    
+    @Test
+    public void parserSmallLettersTest() {
+        String input = "hit fish with bat";
+        Game testGrimm = new Game("Klaus");
+        testGrimm.createGameArea();
+        testGrimm.createCharacter("Klaus");
+        Game.locations[0].addExit(1, 8);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("FREE FISH"), true);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH"), false);
+        Command.checkCommand(input);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("FREE FISH"), false);
+        Assert.assertEquals(Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH"), true);    
     }
 }
     
