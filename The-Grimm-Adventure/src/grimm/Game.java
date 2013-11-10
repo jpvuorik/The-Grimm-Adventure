@@ -5,6 +5,7 @@
 package grimm;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 /**
  *Game on se luokka, mikä määrittelee mitä alueita, hahmoja ja esineitä peliin luodaan. Siellä myös sijaitsee
  * pelin pää while-loop, joka jatkuu kunnes peli loppuu.
@@ -50,6 +51,7 @@ public class Game {
     public Game(String characterName) {
         locations = new Location [10];
         name = characterName;
+        
     }
     
     /**
@@ -59,14 +61,41 @@ public class Game {
     public void startGame() {
         createGameArea();
         createCharacter(name);
-        while (!TheGrimmAdventure.quit) {
+        /*while (!TheGrimmAdventure.quit) {
             System.out.println("\n"+locations[playerLocation].getDescription());
             checkForEvent();
             System.out.println(Command.checkCommand(scan.nextLine()));           
         }
         if (TheGrimmAdventure.win) {
             System.out.println("Congratulations! You have won the game!");
+        }*/
+    }
+    
+    
+    
+     /**
+    * Metodi tulostaa näytölle valitun hahmon taustatarinan
+    */
+    public String choice(int input) {
+        if (input == 1){
+            return "Your name is Klaus Heinrich and you are 11 years old and you've lived your entire\n"
+                + "life in the town of Buxtehude. Orphaned at a young age, you were raised by your grandmother.\n"
+                + "She has always been nice to you, but losing your parents has made you jaded for your age.\n"
+                + "Because you're big for your age, this has led to you becoming something of a school bully.\n"
+                + "You're big, good in a fight and you've always loved the stories grandma tells you at night.\n"
+                + "You're also not very good at studying and your childhood traumas have left you easily scared at times.\n"
+                + "You always carry with you your cigarette lighter, a pack of cigarettes and a baseball bat.\n"
+                + "You were walking back home from detention, taking a shortcut through the park, when suddenly\n"
+                + "You heard a noise coming from the trees. You went to investigate and blacked out. You \n"
+                + "are awakened by the sound of waves...";
+        } 
+        if (input == 2) {
+            return "Your name is Albrecht Kleisner";            
         }
+        if (input == 3) {
+            return "Your name is Axel Brenner";
+        }
+        return null;                    
     }
     
     /**
@@ -146,7 +175,7 @@ public class Game {
      * Tarkistaa pitäisikö jotakin erikoista tapahtua. Esimerkiksi, onko hahmo niin fiksu, että tietää
      * tilanteesta enemmän kuin tyhmempi hahmo.
      */
-    private void checkForEvent() {
+    public void checkForEvent() {
         if (locations[playerLocation].isObjectHere("DARK") && player.getAttributes(Command.BRAVERY)==Command.BAD) {
             System.out.println("You shiver.");
         }

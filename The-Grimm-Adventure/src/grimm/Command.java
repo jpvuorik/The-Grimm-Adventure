@@ -591,7 +591,7 @@ public class Command {
         if (userCommand.startsWith("TIE")) {
             if (userCommand.contains("ROPE")) {
                 if (userCommand.contains("FISH") && Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH")) {
-                    response = "You tie the end of the rope to the fish. After awhile the fish comes out of\n"
+                    response = "You tie the end of the rope to the fish. After a while the fish comes out of\n"
                             + "it's stupor and tries to swim away. The raft starts speeding to the north\n"
                             + "and after a few hectic moments it comes to a stop inside a cave";
                     Game.locations[LAKE].removeObject("STUNNED FISH");
