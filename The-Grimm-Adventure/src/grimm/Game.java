@@ -13,11 +13,7 @@ import java.util.Scanner;
  * @author John
  */
 public class Game {
-    /**
-     * Käyttäjän syöte.
-     */
-    private Scanner scan = new Scanner(System.in);
-    
+     
     /**
      * Pelialue. Taulukon indeksit kuvaavat alueiden sijaintia.
      */
@@ -26,7 +22,7 @@ public class Game {
     /**
      * Kertoo missä locations taulun indeksissä pelaaja tällä hetkellä on.
      */
-    public static int playerLocation;
+    public static int playerLocation = 0;
     
     /**
      * Hahmojen esineet.
@@ -50,29 +46,11 @@ public class Game {
      */
     public Game(String characterName) {
         locations = new Location [10];
-        name = characterName;
-        
-    }
-    
-    /**
-     * Luo pelialueen createGameArea metodin kautta, luo pelaajahahmon createCharacter metodin kautta
-     *  ja aloittaa pelin pää while-loopin.
-     */
-    public void startGame() {
         createGameArea();
-        createCharacter(name);
-        /*while (!TheGrimmAdventure.quit) {
-            System.out.println("\n"+locations[playerLocation].getDescription());
-            checkForEvent();
-            System.out.println(Command.checkCommand(scan.nextLine()));           
+        createCharacter(characterName);
+        
         }
-        if (TheGrimmAdventure.win) {
-            System.out.println("Congratulations! You have won the game!");
-        }*/
-    }
-    
-    
-    
+        
      /**
     * Metodi tulostaa näytölle valitun hahmon taustatarinan
     */
@@ -87,7 +65,7 @@ public class Game {
                 + "You always carry with you your cigarette lighter, a pack of cigarettes and a baseball bat.\n"
                 + "You were walking back home from detention, taking a shortcut through the park, when suddenly\n"
                 + "You heard a noise coming from the trees. You went to investigate and blacked out. You \n"
-                + "are awakened by the sound of waves...";
+                + "are awakened by the sound of waves...\n";
         } 
         if (input == 2) {
             return "Your name is Albrecht Kleisner";            

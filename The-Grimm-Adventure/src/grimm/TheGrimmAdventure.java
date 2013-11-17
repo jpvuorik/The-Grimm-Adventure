@@ -26,7 +26,6 @@ public class TheGrimmAdventure {
     /**
      * Pelaajan valitsema hahmo.
      */
-    private static String choice;
     
     /**
      * Laittaa käyttäjän valitsemaan pelattavan hahmon ja aloittaa pelin.
@@ -34,15 +33,6 @@ public class TheGrimmAdventure {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Game grimm = new Game("Klaus");
-        GUI screen = new GUI();
-
-        screen.createAndShowGUI(grimm);
-        
-
-                    
-        
-        
-        
+        RunGame.start();        
     }   
 }
