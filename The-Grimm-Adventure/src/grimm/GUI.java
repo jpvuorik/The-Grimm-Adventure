@@ -73,17 +73,11 @@ public class GUI extends JPanel implements ActionListener {
      * Tekee käyttöjärjestelmästä näkyvän 
      */
     public void showGUI() {
-        //Create and set up the window.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Add contents to the window.
         frame.add(this);
-
-        //Display the window.
         frame.pack();
-        frame.setVisible(true);
-        
-    }
+        frame.setVisible(true);        
+    }    
 }
 
 

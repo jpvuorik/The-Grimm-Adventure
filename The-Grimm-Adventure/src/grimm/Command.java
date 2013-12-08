@@ -162,6 +162,56 @@ public class Command {
     private static String response;
     
     /**
+     * Kuvaus paikasta, jota päivitetään sen mukaan kun asiat muuttuvat.
+     */
+    private static String description = "";
+    
+    /**
+     * Cave lokaation kuvauksen perusosa, joka ei muutu. .
+     */
+    private static String cave = "You are in a cave with a waterway leading to the south.";
+    
+    /**
+     * Kuvaus nälkäisestä käärmeestä. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String hungrySnake = "\nThere is a hungry white snake in the corner.";
+    
+    /**
+     * Kuvaus syövästä käärmeestä. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String eatingSnake = "\nThere is a white snake eating a hare in the corner.";
+    
+    /**
+     * Kuvaus kuolleesta käärmeestä. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String deadSnake = "\nThere is a dead snake on the cave floor.";
+    
+    /**
+     * Kuvaus lautasta. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String raft = "\nThere is a raft on the waterway.";
+    
+    /**
+     * Kuvaus lautasta, jossa on kala kiinni. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String raftFish = "\nThere is a raft on the waterway with a fish harnessed to it.";    
+    
+    /**
+     * Kuvaus lautasta, jossa on köysi. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String raftRope = "\nThere is a raft on the waterway with some rope tied to it.";
+    
+    /**
+     * Kuvaus luolan uloskäynnistä. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String caveExit = "\nThere's an exit to the east hidden in the shadows.";
+    
+    /**
+     * Kuvaus luolan uloskäynnistä, kun sitä ei ole löydetty. Lisätään description Stringiin, jos on tarvetta.
+     */
+    private static String noCaveExit = "\nThe far wall is hidden in shadows and you see no exits.";
+       
+    /**
      * Ottaa vastaan pelaajan syötteen, lähettää sen kaikille muille Command luokan metodeille, jotka tarkistavat
      * mikä käsky se on.
      * 
@@ -176,6 +226,7 @@ public class Command {
         describe(command);
         dig(command);
         eatOrDrink(command);
+        examine(command);
         feed(command);
         help(command);
         hit(command);
@@ -183,11 +234,13 @@ public class Command {
         move(command); 
         open(command);
         pickUp(command);
+        pull(command);
         quit(command);
         search(command);
         smoke(command);
         talk(command);
         tie(command);
+        throwItem(command);
         use(command);
         return response;
     }
@@ -208,11 +261,11 @@ public class Command {
                 if (Game.locations[LAKE].isObjectHere("ROPE")) {
                     Game.locations[LAKE].removeObject("ROPE");
                     Game.locations[CAVE].addObject("ROPE");
-                    Game.locations[CAVE].setDescription("You are in a cave with a waterway leading to the south."
-                        + "The far wall is covered in darkness and you can't see a way out.\nThere's a raft"
-                        + " with a rope on it");
-                } else { Game.locations[CAVE].setDescription("You are in a cave with a waterway leading to the south."
-                        + "The far wall is covered in darkness and you can't see a way out.\nThere's a raft here.");}
+                    description = noCaveExit + raftRope;
+                    Game.locations[CAVE].setDescription(cave + description);
+                } else {
+                    description = noCaveExit + raft;
+                    Game.locations[CAVE].setDescription(cave + description);}
             }
         }
      }
@@ -224,10 +277,22 @@ public class Command {
      */
     public static void cut(String userCommand) {
          if (userCommand.startsWith("CUT") || userCommand.startsWith("USE")) {
-             if (userCommand.contains("KNIFE") && userCommand.contains("ROPE")) {            
+             if (Game.player.checkInventory("KNIFE") && userCommand.contains("ROPE")) {            
                 response = "You cut the rope free of the raft and take it with you.";
                 Game.player.addItem("ROPE");
                 Game.locations[Game.playerLocation].removeObject("ROPE");
+                if (Game.playerLocation == CAVE) {
+                    if (Game.locations[CAVE].isObjectHere("EXIT")){
+                        description = caveExit;
+                    } else { description = noCaveExit;}
+                    description = description + raft;                    
+                    Game.locations[CAVE].setDescription(cave + description);
+                } else {
+                    Game.locations[CAVE].setDescription("You are on a tiny raft floating in the middle of a lake. "
+                + "A large fish keeps swimming around the raft in circles. "
+                + "The shore seems really far away except for some cliffs to the north. "
+                + "You think you see a cave opening on the cliffside.");
+                }
             }
         }
      }
@@ -263,9 +328,8 @@ public class Command {
         if (userCommand.startsWith("EAT") || userCommand.startsWith("CONSUME")) {
             if (userCommand.contains("SNAKE") && Game.player.checkInventory("DEAD SNAKE")) {
                 response = "You take a bite out of the snake. It's pretty tasty."
-                        + " Suddenly your hade is filled with strange information";
+                        + " Suddenly your mind is filled with strange information";
                 Character.animalFriend =true;
-                Game.player.removeItem("DEAD SNAKE");
             }
                 
         }
@@ -276,6 +340,35 @@ public class Command {
         }   
     }
     
+    /**
+     * Tarkistaa yrittääkö pelaaja tutkia jotain.
+     * 
+     * @param userCommand Pelaajan syöte.
+     */
+    public static void examine (String userCommand) {
+        boolean check = false;     
+        if (userCommand.startsWith("EXAMINE") || userCommand.startsWith("SEARCH")) {
+             if (Game.player.checkInventory("MAGNIFYING GLASS") && userCommand.contains("MAGNIFYING GLASS")) {
+            check =true;
+             }
+        }
+        if (userCommand.startsWith("USE") && userCommand.contains("MAGNIFYING GLASS")) {
+            if (Game.player.checkInventory("MAGNIFYING GLASS")) {
+               check =true;
+             }
+        }        
+        if (userCommand.contains("WELL") || userCommand.contains("LID")) {
+            if (Game.locations[FIELDS].isObjectHere("CLOSED WELL")) {
+                if (check) {
+                    response = "You start investigating the well using your magnifying glass. "
+                            + "After some searching you find clear signs that people have been "
+                            + "entering the well.";
+                    Game.locations[FIELDS].removeObject("CLOSED WELL");
+                    Game.locations[FIELDS].addObject("INTERESTING WELL");
+                } 
+            }
+        }
+    }
     /**
      * Tarkistaa yrittääkö pelaaja ruokkia jotakin.
      * 
@@ -288,7 +381,13 @@ public class Command {
                     response = "You give the hare to the snake. It starts slowly eating it.";
                     Game.locations[Game.playerLocation].removeObject("HUNGRY SNAKE");
                     Game.locations[Game.playerLocation].addObject("WELL-FED SNAKE");
-                }
+                    Game.player.removeItem("HARE");
+                    description = "";
+                    if (Game.locations[CAVE].isObjectHere("HARNESSED FISH")) {                        
+                        description = caveExit + raftFish + eatingSnake;
+                    }                       
+                            Game.locations[CAVE].setDescription(cave + description);
+                }                
             } else if (userCommand.contains("HEDGEHOG") || userCommand.contains("SNAKE")) {
                 if (Game.playerLocation==FIELDS && Game.player.checkInventory("DEAD SNAKE")); {
                     if (Game.locations[FIELDS].isObjectHere("ANGRY HEDGEHOG")) {
@@ -299,14 +398,14 @@ public class Command {
                     response = "You give the snake to the hedgehog. It starts slowly eating it.";
                     Game.locations[Game.playerLocation].removeObject("HEDGEHOG");
                     Game.locations[Game.playerLocation].addObject("HAPPY HEDGEHOG");
-                    Game.locations[CAVE].setDescription("You seem to be in a farmers field." 
-                            + "The field is filled with furrows and somekind of plants.\n"
-                            + "There's a hedgehog drinking brandy and eating a snake nearby and some"
-                            + " hills to the south. There's also a well with a lid on it next to the fields.");
-
+                    Game.player.removeItem("DEAD SNAKE");
+                    Game.locations[FIELDS].setDescription("You seem to be in a farmers field. " 
+                            + "The field is filled with furrows and somekind of plants. "
+                            + "There's a hedgehog eating a snake nearby and some hills to the south."
+                            + " There's also a well with a lid on it next to the fields.");
                     }  
                 }        
-            }
+            }            
         }
     }
     
@@ -320,12 +419,12 @@ public class Command {
             response = "Commands:\n quit: Leave the game\n"
                     + "inventory or i: Lists your inventory\n"
                     + "describe: Describes your character\n"
-                    + "north or n: Walk north(same for other directions also in and out)"
-                    + "Other commands: feed, use, swim, pick up, hit, give, search, tie, eat, drink"
-                    + "light, quit, talk, pull, jump, go";
+                    + "north or n: Walk north(same for other directions also in and out)\n"
+                    + "Other commands: feed, use, swim, pick up, hit, give, search, tie, eat, drink, "
+                    + "light, quit, talk, pull, jump, go, pull, dig, throw, examine";
         }
     }
-    
+        
     /**
      * Tarkistaa yrittääkö pelaaja lyödä jotakin.
      * 
@@ -340,9 +439,9 @@ public class Command {
                         Game.player.removeItem("BASEBALL BAT");
                         Game.locations[LAKE].removeObject("FREE FISH");
                         Game.locations[LAKE].addObject("STUNNED FISH");
-                        Game.locations[LAKE].setDescription("You are on a tiny raft floating in the middle of a lake.\n"
-                                + "A large fish is floating stunned next to the raft and there is some rope with one end free on\n"
-                                + "the raft. The shore seems really far away except for some cliffs to the north and you\n"
+                        Game.locations[LAKE].setDescription("You are on a tiny raft floating in the middle of a lake. "
+                                + "A large fish is floating stunned next to the raft and there is some rope with one end free on "
+                                + "the raft. The shore seems really far away except for some cliffs to the north and you "
                                 + "think you see a cave opening on the cliffside.");
                     } else { response = "You do not have a bat.";}
                 } else {response = "Your reach isn't long enough to attack the fish.";}
@@ -351,6 +450,8 @@ public class Command {
             } else if (userCommand.contains("SNAKE") && Game.locations[CAVE].isObjectHere("WELL-FED SNAKE")) {
                 if (Game.player.getAttributes(BRAVERY)!=BAD && Game.player.getAttributes(BRAWN)==GOOD) {
                     response = "You expertly attack the distracted snake, killing it.";
+                    description = "" + caveExit + raftFish + deadSnake;
+                    Game.locations[CAVE].setDescription(cave + description);
                     Game.locations[CAVE].removeObject("WELL-FED SNAKE");
                     Game.locations[CAVE].addObject("DEAD SNAKE");
                 }
@@ -370,10 +471,11 @@ public class Command {
      */
     public static void inventory (String userCommand) {
         if (userCommand.equals("INVENTORY") || userCommand.equals("I")) {
+            String inv = "";
             for (String s:Game.player.getItems()) {
-                System.out.println(s);
+                inv = inv + s +"\n";
             }
-            response = "";
+            response = inv;
         }        
     }
     
@@ -392,10 +494,10 @@ public class Command {
             }
         }
         if (userCommand.startsWith("SWIM") && Game.playerLocation == LAKE) {
-            if (userCommand.contains("NORTH") || userCommand.startsWith("CAVE")) {
+            if (userCommand.contains("NORTH") || userCommand.contains("CAVE")) {
                 if (Game.player.getAttributes(ATHLETICS) == GOOD){
-                    response = "You always liked swimming. You jump into the water and start swimming"
-                            + "towards the cave in the north.\nAfter a few minutes of brisk swimming, you're there: ";
+                    response = "You always liked swimming. You jump into the water and start swimming "
+                            + "towards the cave in the north. After a few minutes of brisk swimming, you're there.";
                     Game.playerLocation = CAVE;
             } else if (Game.player.getAttributes(ATHLETICS) == AVERAGE){
                     response = "You jump into the water desperate to get to shore. You almost make it,"
@@ -406,8 +508,7 @@ public class Command {
                             + " You drown.";
                     TheGrimmAdventure.quit=true;
                 }
-            }
-            
+            }            
         }
         if (userCommand.startsWith("GO") || userCommand.startsWith("JUMP")) {
              if (userCommand.contains("WELL") && Game.locations[Game.playerLocation].isObjectHere("OPEN WELL")) {
@@ -439,9 +540,19 @@ public class Command {
                     Game.locations[FIELDS].removeObject("INTERESTING WELL");
                     Game.locations[FIELDS].addObject("OPEN WELL");
                     Game.locations[FIELDS].setDescription("You seem to be in a farmers field." 
-                            + "The field is filled with furrows and somekind of plants.\n"
-                            + "There's a hedgehog drinking brandy and eating a snake nearby and some"
-                            + " hills to the south. There's also an open well next to the fields.");
+                            + "The field is filled with furrows and somekind of plants."
+                            + "There's a hedgehog eating a snake nearby and some hills to the south."
+                            + " There's also an open well next to the fields.");
+                } else if (userCommand.contains("STICK")){
+                    response = "With some effort you pry open the lid with the stick";
+                    Game.locations[FIELDS].removeObject("INTERESTING WELL");
+                    Game.locations[FIELDS].addObject("OPEN WELL");
+                    Game.locations[FIELDS].setDescription("You seem to be in a farmers field." 
+                            + "The field is filled with furrows and some kinds of plants."
+                            + "There's a hedgehog drinking brandy nearby and some hills to the south."
+                            + " There's also an open well next to the fields.");                    
+                } else {
+                    response = "You're not big and strong enough to open the well bare handed.";
                 }                    
             }
          }
@@ -469,7 +580,10 @@ public class Command {
             if (userCommand.contains("SNAKE")) {
                  if(Game.locations[Game.playerLocation].isObjectHere("WELL-FED SNAKE")) {
                      if (Game.player.getAttributes(BRAVERY) != BAD && Game.player.getAttributes(CHARISMA)==GOOD) {
-                         response = "You gently pick up the snake.";
+                         response = "You gently pick up the snake and suddenly the snake speaks:\n"
+                                 + "Thank you for feeding me, friend. As compensation I will gift you "
+                                 + "with the ability to speak with animals";
+                         Character.animalFriend = true;
                          Game.player.addItem("LIVE SNAKE");
                          Game.locations[CAVE].removeObject("WELL-FED SNAKE");                         
                      } else {response = "You're still too afraid to pick up the snake.";}
@@ -482,12 +596,45 @@ public class Command {
                 Game.player.addItem("DEAD SNAKE");
                 Game.locations[CAVE].removeObject("DEAD SNAKE");
                 response = "You pick up the snake.";
+                description = caveExit + raftFish;
+                Game.locations[CAVE].setDescription(cave + description);
             }
             } 
             if (userCommand.contains("HEDGEHOG") && Game.playerLocation == FIELDS) {
                 response = "The hedgehogs prickly spines pierce your flesh. You fail.";
             }
+            if (userCommand.contains("STICK") && Game.locations[Game.playerLocation].isObjectHere("STICK")) {
+                Game.locations[HILLSIDE].removeObject("STICK");
+                Game.player.addItem("STICK");
+                Game.locations[HILLSIDE].setDescription("You see a beautiful hillside stretching out infront of you. "
+                        + "To the west on the side of the hill there is a cave entrance and to the north " 
+                        + "there seems to be fields of some kind.");
+                response = "You pick up the stick";
+            }
         } 
+    }
+    
+    /**
+     * Tarkistaa yrittääkö pelaaja vetää jotain.
+     * 
+     * @param userCommand Pelaajan syöte.
+     */
+    public static void pull (String userCommand) {
+        if (userCommand.startsWith("PULL") && userCommand.contains("ROPE")) {
+            if (Game.locations[Game.playerLocation].isObjectHere("ROPE")) {
+                if (Game.playerLocation== FIELDS) {
+                    response = "After a lot of work you manage to pull of the lid to the well.";
+                    Game.locations[FIELDS].removeObject("INTERESTING WELL");
+                    Game.locations[FIELDS].addObject("OPEN WELL");
+                    Game.locations[FIELDS].setDescription("You seem to be in a farmers field." 
+                            + "The field is filled with furrows and some kinds of plants."
+                            + "There's a hedgehog drinking brandy nearby and some hills to the south."
+                            + " There's also an open well next to the fields.");
+                } else {
+                    response = "You pull on the rope achieving nothing.";
+                }                                     
+            }
+        }
     }
     
     /**
@@ -514,9 +661,22 @@ public class Command {
                     response = "It's too creepy. There could be something dangerous there";
                 } else {
                     response = "After a few minutes of searching, you find an opening to the east.";
-                    Game.locations[1].addExit(HILLSIDE, EAST);   
+                    Game.locations[CAVE].addExit(HILLSIDE, EAST);
+                    Game.locations[CAVE].addObject("EXIT");
+                    description = caveExit;
+                    if (Game.locations[CAVE].isObjectHere("HUNGRY SNAKE")) {
+                        description = description + hungrySnake;
+                    }
+                    if (Game.locations[CAVE].isObjectHere("HARNESSED FISH")) {
+                        description = description + raftFish;
+                    } else if (Game.locations[CAVE].isObjectHere("ROPE")) {
+                        description = description + raftRope;
+                    } else if (Game.locations[CAVE].isObjectHere("RAFT")) {
+                        description = description + raft;
+                    }
+                    Game.locations[CAVE].setDescription(cave + description);                      
                 }
-            }
+            }            
             if (userCommand.contains("FURROW") || userCommand.contains("FIELD")) {
                 if (Game.player.getAttributes(FABLELORE) != BAD) {
                     response = "Remembering the fate of the hare in the story you search the furrows."
@@ -526,13 +686,14 @@ public class Command {
                 }
             }
             if (userCommand.contains("WELL") || userCommand.contains("LID")) {
-                if (!Game.locations[Game.playerLocation].isObjectHere("OPEN WELL")) {
-                    response = "The well is high and the lid is heavy.";
-                } else { response = "The well is very deep, you cannot see the bottom.";}
-     
+                if (!userCommand.contains("MAGNIFYING GLASS")) {
+                    if (!Game.locations[Game.playerLocation].isObjectHere("OPEN WELL")) {
+                        response = "The well is high and the lid is heavy.";
+                    } else { response = "The well is very deep, you cannot see the bottom.";}     
+                }
             }
-        }        
-    }
+        }
+    }    
         
     /**
      * Tarkistaa yrittääkö pelaaja tupakoida.
@@ -573,8 +734,8 @@ public class Command {
                     }
                 }
                 if (Game.locations[Game.playerLocation].isObjectHere("HAPPY HEDGEHOG")) {
-                    response = "The hedgehog says: Thank you for that delectable meal. Snake goes so well with brandy."
-                            +"\nTalking of wells, if you're looking for a way home, try the well.";
+                    response = "The hedgehog says: Thank you for that delectable meal. Snake goes so well with brandy. "
+                            +"Talking of wells, if you're looking for a way home, try the well.";
                     Game.locations[FIELDS].removeObject("CLOSED WELL");
                     Game.locations[FIELDS].addObject("INTERESTING WELL");
                 }
@@ -582,6 +743,37 @@ public class Command {
         }
      }
     
+    /**
+     * Tarkistaa yrittääkö heittää jotain.
+     * 
+     * @param userCommand Pelaajan syöte.
+     */
+    public static void throwItem(String userCommand) {
+        if (userCommand.startsWith("THROW") && userCommand.contains("FRISBEE")) {
+            if(Game.playerLocation == LAKE) {
+                response = "You throw the frisbee into the lake, then swim to it, retrieve it and swim"
+                        + " back to the raft.";
+            }
+            if(Game.playerLocation == CAVE) {
+                    response = "You decide not to throw the frisbee, it's not cool to throw frisbees in caves.";                    
+            }
+            if(Game.playerLocation == HILLSIDE && Game.locations[HILLSIDE].isObjectHere("BUSHES")) {
+                    response = "You throw the frisbee into some bushes. When you go get it, you notice a stick "
+                            + "there.";
+                    Game.locations[HILLSIDE].addObject("STICK");
+                    Game.locations[HILLSIDE].removeObject("BUSHES");
+                    Game.locations[HILLSIDE].setDescription("You see a beautiful hillside stretching out infront of you. "
+                        + "To the west on the side of the hill there is a cave entrance and to the north " 
+                        + "there seems to be fields of some kind. There's a stick here.");
+            }
+            if(Game.playerLocation == FIELDS) {
+                response = "You happily throw your frisbee in the open fields and into some furrows. You hear"
+                        + " a strange thud and when you go to retrieve, you find a dead hare.\n"
+                        + "You must have killed it! Shocked you pick up it's corpse.";
+                Game.player.addItem("HARE");
+            }
+        }
+    }
     /**
      * Tarkistaa yrittääkö pelaaja sitoa jotain.
      * 
@@ -591,8 +783,8 @@ public class Command {
         if (userCommand.startsWith("TIE")) {
             if (userCommand.contains("ROPE")) {
                 if (userCommand.contains("FISH") && Game.locations[Game.playerLocation].isObjectHere("STUNNED FISH")) {
-                    response = "You tie the end of the rope to the fish. After a while the fish comes out of\n"
-                            + "it's stupor and tries to swim away. The raft starts speeding to the north\n"
+                    response = "You tie the end of the rope to the fish. After a while the fish comes out of "
+                            + "it's stupor and tries to swim away. The raft starts speeding to the north "
                             + "and after a few hectic moments it comes to a stop inside a cave";
                     Game.locations[LAKE].removeObject("STUNNED FISH");
                     Game.locations[LAKE].removeObject("RAFT");
@@ -600,9 +792,20 @@ public class Command {
                     Game.playerLocation = CAVE;
                     Game.locations[CAVE].addObject("RAFT");
                     Game.locations[CAVE].addObject("HARNESSED FISH");
-                    Game.locations[CAVE].setDescription("You are in a cave with a waterway leading to the south."
-                + " The far wall is covered in darkness and you can't see a way out.\nThere's a raft"
-                            + " with a fish harnessed to it in the water.");
+                    description = noCaveExit + raftFish;
+                    Game.locations[CAVE].setDescription(cave + description);
+                }
+                if (userCommand.contains("WELL") || userCommand.contains("LID")) {
+                        if (Game.locations[Game.playerLocation].isObjectHere("INTERESTING WELL") && Game.player.checkInventory("ROPE")) {
+                            response = "With some difficulty you tie the rope to the lid of the well.";
+                            Game.locations[FIELDS].setDescription("You seem to be in a farmers field." 
+                                + " The field is filled with furrows and somekind of plants."
+                                + " There's a hedgehog eating a snake nearby and some hills to the south."
+                                + " There's also a well with a lid on it next to the fields."
+                                + " The lid has a rope tied to it.");
+                            Game.locations[FIELDS].addObject("ROPE");
+                            Game.player.removeItem("ROPE");
+                        }
                 }
             }
         }
@@ -622,9 +825,19 @@ public class Command {
                                 + "a white snake in the corner.";
                         Game.locations[Game.playerLocation].removeObject("DARK");
                         Game.locations[Game.playerLocation].addObject("HUNGRY SNAKE");
+                        if (Game.locations[CAVE].isObjectHere("EXIT")) {
+                            description = caveExit;
+                        } else { description = noCaveExit;}
+                            if (Game.locations[CAVE].isObjectHere("HARNESSED FISH")) { description = description + raftFish + hungrySnake;}
+                        Game.locations[CAVE].setDescription(cave + description);                                                               
+                        }
                     }
                 }
             }
         }
-    }    
 }
+    
+
+
+        
+        
